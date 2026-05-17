@@ -38,9 +38,8 @@ func _on_area_2d_input_event(_viewport, event, _shape_idx):
 			velocity = Vector2(0,0)
 
 func _process(delta):
-	# we are messing with these vars just to learn git
 	var window_pos = DisplayServer.window_get_position()
-	var window_size = DisplayServer.window_get_size() / 2
+	var window_size = DisplayServer.window_get_size()
 	var screen_size = DisplayServer.screen_get_size()
 	var hitbox = $Area2D/CollisionShape2D
 	
