@@ -37,7 +37,9 @@ func _on_area_2d_input_event(_viewport, event, _shape_idx):
 			last_mouse_pos = DisplayServer.mouse_get_position()
 			velocity = Vector2(0,0)
 
+var bleed = 50
 func _process(delta):
+	#i want to make it use the hitbox here but inshallah its too hard i give up
 	var window_pos = DisplayServer.window_get_position()
 	var window_size = DisplayServer.window_get_size()
 	var screen_size = DisplayServer.screen_get_size()
@@ -54,15 +56,15 @@ func _process(delta):
 		var new_pos = Vector2(window_pos) + (velocity * delta)
 		
 		#collisions
-		if new_pos.x < 0:
-			new_pos.x = 0
+		if new_pos.x < -bleed:
+			new_pos.x = -bleed
 			velocity.x = -velocity.x * bounce
-		elif new_pos.x + window_size.x > screen_size.x:
-			new_pos.x = screen_size.x - window_size.x
+		elif new_pos.x + window_size.x > screen_size.x + bleed:
+			new_pos.x = screen_size.x - window_size.x + bleed
 			velocity.x = -velocity.x * bounce
 			
-		if new_pos.y < 0:
-			new_pos.y = 0
+		if new_pos.y < -bleed:
+			new_pos.y = -bleed
 			velocity.y = -velocity.y * bounce
 		elif new_pos.y + window_size.y > screen_size.y:
 			new_pos.y = screen_size.y - window_size.y
@@ -73,7 +75,7 @@ func _process(delta):
 	
 	if is_dragging:
 		state = "dragging"
-	elif Vector2(window_pos).y + window_size.y < screen_size.y - 5:
+	elif Vector2(window_pos).y + window_size.y < screen_size.y:
 		state = "falling"
 	else:
 		state = "idle"
