@@ -41,13 +41,11 @@ func _process(delta):
 	var window_pos = DisplayServer.window_get_position()
 	var window_size = DisplayServer.window_get_size()
 	var screen_size = DisplayServer.screen_get_size()
-	var hitbox = $Area2D/CollisionShape2D
 	
 	if is_dragging:
 		var global_mouse_pos = DisplayServer.mouse_get_position()
 		DisplayServer.window_set_position(Vector2i(Vector2(global_mouse_pos) - drag_offset))
 		velocity = (global_mouse_pos - last_mouse_pos) / delta
-		print(velocity)
 		last_mouse_pos = global_mouse_pos
 	else:
 		#physics
