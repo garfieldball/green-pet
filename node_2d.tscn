@@ -1,13 +1,40 @@
 [gd_scene format=3 uid="uid://4pqund3nukl7"]
 
 [ext_resource type="Texture2D" uid="uid://c37itya4nc5cl" path="res://idle_eyesopen_default.png" id="1_q6r6c"]
+[ext_resource type="Texture2D" uid="uid://pe4glv8rstry" path="res://dragging_default_TEMP.png" id="1_rj586"]
+[ext_resource type="Texture2D" uid="uid://b2d10iathasd7" path="res://dragging_violent_TEMP.png" id="2_4d7sh"]
 [ext_resource type="Texture2D" uid="uid://dqi34nrj5u378" path="res://idle_eyesclosed_default.png" id="2_kdubu"]
 [ext_resource type="Texture2D" uid="uid://7dck2jygpv3x" path="res://idle_eyesopen_notcool.png" id="3_d21ai"]
+[ext_resource type="Texture2D" uid="uid://bhacl0c3y1vs6" path="res://falling_TEMP.png" id="3_ir8iy"]
 [ext_resource type="Texture2D" uid="uid://dwkx8s2831jlv" path="res://idle_eyesclosed_notcool.png" id="4_rj586"]
 [ext_resource type="Script" uid="uid://ck7si71yuaqjj" path="res://animated_sprite_2d.gd" id="5_4d7sh"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_y32ns"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_rj586")
+}],
+"loop": true,
+"name": &"dragging_default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_4d7sh")
+}],
+"loop": true,
+"name": &"dragging_violent",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ir8iy")
+}],
+"loop": true,
+"name": &"falling",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_q6r6c")
@@ -51,5 +78,7 @@ script = ExtResource("5_4d7sh")
 position = Vector2(0, 100.62482)
 scale = Vector2(0.99999905, 0.99999905)
 shape = SubResource("RectangleShape2D_q6r6c")
+
+[node name="Timer" type="Timer" parent="AnimatedSprite2D" unique_id=38102114]
 
 [connection signal="input_event" from="AnimatedSprite2D/Area2D" to="AnimatedSprite2D" method="_on_area_2d_input_event"]

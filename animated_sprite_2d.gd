@@ -1,4 +1,4 @@
-#TODO: idle event handling with alternates and blinking; make physics depend on hitbox
+#TODO: idle event handling with alternates and blinking; make pen stuff work?? update temp sprites
 
 extends AnimatedSprite2D
 var state
@@ -57,57 +57,80 @@ func _process(delta):
 		
 		#collisions
 		if new_pos.x < -bleed:
+			#left
 			new_pos.x = -bleed
 			velocity.x = -velocity.x * bounce
 		elif new_pos.x + window_size.x > screen_size.x + bleed:
+			#right
 			new_pos.x = screen_size.x - window_size.x + bleed
 			velocity.x = -velocity.x * bounce
-			
 		if new_pos.y < -bleed:
+			#top
 			new_pos.y = -bleed
 			velocity.y = -velocity.y * bounce
 		elif new_pos.y + window_size.y > screen_size.y:
+			#bottom
 			new_pos.y = screen_size.y - window_size.y
 			velocity.x = velocity.x * ground_friction
 			velocity.y = -velocity.y * bounce
 			
+			if abs(velocity.y) > 100: 
+				is_recovering = true
+		
 		DisplayServer.window_set_position(Vector2i(new_pos))
 	
 	if is_dragging:
 		state = "dragging"
-	elif Vector2(window_pos).y + window_size.y < screen_size.y:
+		is_recovering = false
+	elif is_recovering or (Vector2(window_pos).y + window_size.y < screen_size.y - 5):
 		state = "falling"
+		if abs(velocity.x) < 20 and abs(velocity.y) < 20:
+			is_recovering = false
 	else:
 		state = "idle"
 	update_animations()
 
+var is_recovering = false
+var target_rotation
+var force
 func update_animations():
 	#flipping
-	if not is_dragging:
-			if velocity.x > 10:
-				flip_h = false
-			elif velocity.x < -10:
-				flip_h = true
+	if velocity.x > 10:
+		flip_h = false
+	elif velocity.x < -10:
+		flip_h = true
 	
 	#rotating
-	if state == "dragging" or state == "falling":
-		var target_rotation = velocity.x * 0.0005
-		var force = (target_rotation - rotation) * 0.2
+	if state == "dragging":
+		target_rotation = velocity.x * 0.0005
+		force = (target_rotation - rotation) * 0.2
+		rotation_velocity += force
+		rotation_velocity *= rotation_damping
+		rotation = lerp(rotation, rotation + rotation_velocity, 0.2)
+	elif state == "falling":
+		#make him sideways
+		if velocity.x > 10:
+			target_rotation = deg_to_rad(90) + (velocity.x * 0.0005)
+		elif velocity.x < -10:
+			target_rotation = deg_to_rad(-90) + (velocity.x * 0.0005)
+		else :
+			target_rotation = velocity.x * 0.0005
+		force = (target_rotation - rotation) * 0.2
 		rotation_velocity += force
 		rotation_velocity *= rotation_damping
 		rotation = lerp(rotation, rotation + rotation_velocity, 0.2)
 	elif state == "idle":
 		rotation = 0
+		rotation_velocity = 0
 	
 	#state handling
-	if state == "dragging" and abs(velocity.length()) > 500:
-		pass # animation = "dragging_violent"
+	if state == "dragging" and abs(velocity.x) > 500:
+		animation = "dragging_violent"
 	elif state == "dragging":
-		pass # animation = "dragging_default"
+		animation = "dragging_default"
 	elif state == "falling":
-		pass # animation = "falling"
+		animation = "falling"
 	
 	#idle handling
-	
-	
-	
+	if state == "idle":
+		animation = "idle_default"
